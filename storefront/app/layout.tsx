@@ -1,6 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Lato, Inter } from 'next/font/google'
+import { Marcellus, Jost } from 'next/font/google'
 import { Providers } from './providers'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
@@ -14,26 +14,26 @@ import dynamic from 'next/dynamic'
 
 const CookieConsent = dynamic(() => import('@/components/cookie-consent'))
 
-const heading = Lato({
+const heading = Marcellus({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['400'],
   variable: '--font-heading',
   display: 'swap',
 })
 
-const body = Inter({
+const body = Jost({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['300', '400', '500'],
   variable: '--font-body',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Store — Modern Commerce',
-    template: '%s | Store',
+    default: 'My Store — Italian Leather Goods',
+    template: '%s | My Store',
   },
-  description: 'Discover curated products crafted with care. A modern ecommerce experience.',
+  description: 'Full-grain Italian leather bags, made to last. Shoulder bags, totes and crossbodies crafted with quiet intention.',
 }
 
 export default function RootLayout({
