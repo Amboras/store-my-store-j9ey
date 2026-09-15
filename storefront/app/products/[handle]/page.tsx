@@ -122,7 +122,7 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <div className="container-custom py-8 lg:py-12">
+      <div className="container-custom py-8 pb-28 lg:py-12 lg:pb-12">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
           {/* Product Images */}
           <div className="space-y-3">
