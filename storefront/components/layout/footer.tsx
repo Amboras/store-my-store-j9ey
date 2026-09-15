@@ -7,8 +7,7 @@ import { usePolicies } from '@/hooks/use-policies'
 const footerLinks = {
   shop: [
     { label: 'All Products', href: '/products' },
-    { label: 'New Arrivals', href: '/products?sort=newest' },
-    { label: 'Collections', href: '/collections' },
+    { label: 'Signature Collection', href: '/collections/signature-bags' },
   ],
   help: [
     { label: 'FAQ', href: '/faq' },
@@ -20,12 +19,8 @@ const footerLinks = {
 export default function Footer() {
   const { policies } = usePolicies()
 
-  // Build company links dynamically based on available policies
-  const companyLinks = [
-    { label: 'About', href: '/about' },
-  ]
+  const companyLinks = [{ label: 'About', href: '/about' }]
 
-  // Add policy links only if they're set in the admin
   if (policies?.privacy_policy) {
     companyLinks.push({ label: 'Privacy Policy', href: '/privacy' })
   }
@@ -40,25 +35,22 @@ export default function Footer() {
   }
 
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="container-custom py-section-sm">
-        {/* Main Footer */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="inline-block">
-              <span className="font-heading text-2xl font-semibold">
-                Store
-              </span>
-            </Link>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Curated products crafted with care. Quality you can feel, design you can see.
-            </p>
-          </div>
+    <footer className="hairline-t">
+      {/* Brand story close */}
+      <div className="container-custom pt-20 pb-16 text-center max-w-2xl mx-auto">
+        <p className="eyebrow mb-5">My Store</p>
+        <p className="font-heading text-xl sm:text-2xl leading-snug text-balance">
+          Every bag begins as raw, full-grain Italian leather — cut, stitched
+          and finished by hand into pieces meant to be carried daily, and
+          kept for years.
+        </p>
+      </div>
 
-          {/* Shop Links */}
+      {/* Links */}
+      <div className="container-custom pb-16">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 max-w-3xl mx-auto text-center sm:text-left">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest mb-4">Shop</h3>
+            <h3 className="text-xs uppercase tracking-widest text-accent mb-4">Shop</h3>
             <ul className="space-y-3">
               {footerLinks.shop.map((link) => (
                 <li key={link.href}>
@@ -70,9 +62,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Help Links */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest mb-4">Help</h3>
+            <h3 className="text-xs uppercase tracking-widest text-accent mb-4">Help</h3>
             <ul className="space-y-3">
               {footerLinks.help.map((link) => (
                 <li key={link.href}>
@@ -84,9 +75,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company Links */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest mb-4">Company</h3>
+            <h3 className="text-xs uppercase tracking-widest text-accent mb-4">Company</h3>
             <ul className="space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.href}>
@@ -98,11 +88,13 @@ export default function Footer() {
             </ul>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Bottom Bar */}
+      <div className="hairline-t">
+        <div className="container-custom py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Store. All rights reserved.
+            &copy; {new Date().getFullYear()} My Store. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <button
