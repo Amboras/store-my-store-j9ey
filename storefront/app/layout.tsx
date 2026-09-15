@@ -78,7 +78,6 @@ export default function RootLayout({
       <body>
         <Providers>
           <ElementPickerListener />
-          <AnnouncementBar />
           <Header />
           <main className="min-h-screen">
             <ErrorBoundary>
