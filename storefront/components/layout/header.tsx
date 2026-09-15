@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Search, ShoppingBag, User, Menu, X, LogIn } from 'lucide-react'
 import { useCart } from '@/hooks/use-cart'
 import { useAuth } from '@/hooks/use-auth'
@@ -11,6 +12,7 @@ import { useCollections } from '@/hooks/use-collections'
 export default function Header() {
   const { itemCount } = useCart()
   const { isLoggedIn } = useAuth()
+  const pathname = usePathname()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -19,8 +21,12 @@ export default function Header() {
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const mobileMenuCloseRef = useRef<HTMLButtonElement>(null)
 
+  const isHome = pathname === '/'
+  const isTransparent = isHome && !isScrolled
+
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10)
+    const handleScroll = () => setIsScrolled(window.scrollY > 40)
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -60,78 +66,95 @@ export default function Header() {
     }
   }, [])
 
+  const primaryCollections = collections?.slice(0, 2) || []
+  const secondaryCollections = collections?.slice(2, 4) || []
+
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-          isScrolled
-            ? 'bg-background/95 backdrop-blur-md border-b shadow-sm'
-            : 'bg-background border-b'
+        className={`${isHome ? 'fixed' : 'sticky'} top-0 inset-x-0 z-40 w-full transition-colors duration-300 ${
+          isTransparent
+            ? 'bg-transparent'
+            : 'bg-background/95 backdrop-blur-md hairline-b'
         }`}
       >
         <div className="container-custom">
-          <div className="flex h-16 items-center justify-between gap-4">
-            {/* Mobile menu toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -ml-2 lg:hidden hover:opacity-70 transition-opacity"
-              aria-label="Open menu"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
+          <div className="flex h-20 items-center justify-between gap-4">
+            {/* Left: mobile toggle + nav */}
+            <div className="flex items-center gap-8 flex-1">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-2 -ml-2 lg:hidden hover:opacity-70 transition-opacity"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <nav className="hidden lg:flex items-center gap-8">
+                <Link href="/products" className="text-xs tracking-[0.15em] uppercase link-underline py-1" prefetch={true}>
+                  Shop All
+                </Link>
+                {primaryCollections.map((collection: any) => (
+                  <Link
+                    key={collection.id}
+                    href={`/collections/${collection.handle}`}
+                    className="text-xs tracking-[0.15em] uppercase link-underline py-1"
+                    prefetch={true}
+                  >
+                    {collection.title}
+                  </Link>
+                ))}
+              </nav>
+            </div>
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="font-heading text-2xl font-semibold tracking-tight">
-                Store
+            {/* Center: Logo */}
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              <span className="font-heading text-xl tracking-[0.08em]">
+                My Store
               </span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/products" className="text-sm tracking-wide uppercase link-underline py-1" prefetch={true}>
-                Shop All
-              </Link>
-              {collections?.slice(0, 4).map((collection: any) => (
+            {/* Right: nav + actions */}
+            <div className="flex items-center gap-8 flex-1 justify-end">
+              <nav className="hidden lg:flex items-center gap-8">
+                {secondaryCollections.map((collection: any) => (
+                  <Link
+                    key={collection.id}
+                    href={`/collections/${collection.handle}`}
+                    className="text-xs tracking-[0.15em] uppercase link-underline py-1"
+                    prefetch={true}
+                  >
+                    {collection.title}
+                  </Link>
+                ))}
+              </nav>
+              <div className="flex items-center gap-1">
                 <Link
-                  key={collection.id}
-                  href={`/collections/${collection.handle}`}
-                  className="text-sm tracking-wide uppercase link-underline py-1"
-                  prefetch={true}
+                  href="/search"
+                  className="p-2.5 hover:opacity-70 transition-opacity"
+                  aria-label="Search"
                 >
-                  {collection.title}
+                  <Search className="h-[18px] w-[18px]" strokeWidth={1.5} />
                 </Link>
-              ))}
-            </nav>
-
-            {/* Actions */}
-            <div className="flex items-center gap-1">
-              <Link
-                href="/search"
-                className="p-2.5 hover:opacity-70 transition-opacity"
-                aria-label="Search"
-              >
-                <Search className="h-5 w-5" />
-              </Link>
-              <Link
-                href={isLoggedIn ? '/account' : '/auth/login'}
-                className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block"
-                aria-label={isLoggedIn ? 'Account' : 'Sign in'}
-              >
-                {isLoggedIn ? <User className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
-              </Link>
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 hover:opacity-70 transition-opacity"
-                aria-label="Shopping bag"
-              >
-                <ShoppingBag className="h-5 w-5" />
-                {itemCount > 0 && (
-                  <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[10px] font-bold text-background">
-                    {itemCount}
-                  </span>
-                )}
-              </button>
+                <Link
+                  href={isLoggedIn ? '/account' : '/auth/login'}
+                  className="p-2.5 hover:opacity-70 transition-opacity hidden sm:block"
+                  aria-label={isLoggedIn ? 'Account' : 'Sign in'}
+                >
+                  {isLoggedIn ? <User className="h-[18px] w-[18px]" strokeWidth={1.5} /> : <LogIn className="h-[18px] w-[18px]" strokeWidth={1.5} />}
+                </Link>
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2.5 hover:opacity-70 transition-opacity"
+                  aria-label="Shopping bag"
+                >
+                  <ShoppingBag className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                  {itemCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
+                      {itemCount}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -141,7 +164,7 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/60"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div
@@ -152,8 +175,8 @@ export default function Header() {
             onKeyDown={handleMobileMenuKeyDown}
             className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-background animate-slide-in-right"
           >
-            <div className="flex items-center justify-between p-4 border-b">
-              <span className="font-heading text-xl font-semibold">Menu</span>
+            <div className="flex items-center justify-between p-4 hairline-b">
+              <span className="font-heading text-lg tracking-wide">Menu</span>
               <button
                 ref={mobileMenuCloseRef}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -167,7 +190,7 @@ export default function Header() {
               <Link
                 href="/products"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-3 text-lg tracking-wide border-b border-border/50"
+                className="block py-3 text-base tracking-wide border-b border-border/50"
                 prefetch={true}
               >
                 Shop All
@@ -177,7 +200,7 @@ export default function Header() {
                   key={collection.id}
                   href={`/collections/${collection.handle}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block py-3 text-lg tracking-wide border-b border-border/50"
+                  className="block py-3 text-base tracking-wide border-b border-border/50"
                   prefetch={true}
                 >
                   {collection.title}
