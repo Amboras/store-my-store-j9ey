@@ -269,6 +269,41 @@ export default function ProductActions({ product, variantExtensions }: ProductAc
           )}
         </button>
       </div>
+
+      {/* Sticky mobile add-to-cart bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-background/95 backdrop-blur-md hairline-t p-4 flex items-center justify-between gap-4">
+        <ProductPrice
+          amount={currentPriceCents}
+          currency={currency}
+          compareAtPrice={ext?.compare_at_price}
+          soldOut={isOutOfStock}
+          size="card"
+        />
+        <button
+          onClick={handleAddToCart}
+          disabled={isOutOfStock || isAddingItem}
+          className={`flex-1 max-w-[220px] flex items-center justify-center gap-2 py-3 text-xs font-medium uppercase tracking-[0.15em] transition-all ${
+            isOutOfStock
+              ? 'bg-muted text-muted-foreground cursor-not-allowed'
+              : justAdded
+              ? 'bg-green-700 text-white'
+              : 'bg-primary text-primary-foreground hover:opacity-90'
+          }`}
+        >
+          {isAddingItem ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : justAdded ? (
+            <>
+              <Check className="h-4 w-4" />
+              Added
+            </>
+          ) : isOutOfStock ? (
+            'Sold Out'
+          ) : (
+            'Add to Bag'
+          )}
+        </button>
+      </div>
     </div>
   )
 }
