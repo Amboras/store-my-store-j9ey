@@ -110,7 +110,7 @@ export default async function ProductPage({
   return (
     <>
       {/* Breadcrumbs */}
-      <div className="border-b">
+      <div className="hairline-b">
         <div className="container-custom py-3">
           <nav className="flex items-center gap-2 text-xs text-muted-foreground">
             <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -181,7 +181,7 @@ export default async function ProductPage({
             <ProductActions product={product} variantExtensions={variantExtensions} />
 
             {/* Trust Signals */}
-            <div className="grid grid-cols-3 gap-4 py-6 border-t">
+            <div className="grid grid-cols-3 gap-4 py-6 hairline-t">
               <div className="text-center">
                 <Truck className="h-5 w-5 mx-auto mb-1.5" strokeWidth={1.5} />
                 <p className="text-xs text-muted-foreground">Free Shipping</p>
