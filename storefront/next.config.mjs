@@ -6,7 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   distDir: process.env.NEXT_DIST_DIR ?? '.next',
-  allowedDevOrigins: ['*.tunnel.amboras.com'],
+  allowedDevOrigins: ['*.e2b.app', 'admin.amboras.com', '*.tunnel.amboras.com'],
   output: process.env.VERCEL ? undefined : 'standalone',
   poweredByHeader: false,
   compress: true,
@@ -34,6 +34,7 @@ const nextConfig = {
     ],
   },
   experimental: {
+    turbopackMemoryEviction: 'auto',
     optimizePackageImports: [
       'lucide-react',
       '@tanstack/react-query',
